@@ -4,7 +4,14 @@ const authModel = require('../models/auth.model');
 
 const usersGet = async (req = request, res = response) => {
     try {
-        const usuarios = await User.find();
+        const id = req.query.id;
+        let usuarios = null;
+        if (id) {
+            usuarios = await User.findById(id);
+        } else {
+            usuarios = await User.find();
+        }
+
         res.status(200).json({
             msg: 'succes',
             data: usuarios
@@ -52,10 +59,21 @@ const usersDelete = async (req = request, res = response) => {
         id
     });
 };
+const usersGetProfile = async (req = request, res = response) => {
+    let token_raw = req.headers.authorization.split(' ')[1];
+    let token_decode = authModel.decodeToken(token_raw);
+    let profile = await User.findById(token_decode.data.id);
+    profile.password = "";
+    res.status(200).json({
+        msg: 'success',
+        data: profile
+    });
+};
 
 module.exports = {
     usersGet,
     usersPost,
     usersPut,
-    usersDelete
+    usersDelete,
+    usersGetProfile
 };

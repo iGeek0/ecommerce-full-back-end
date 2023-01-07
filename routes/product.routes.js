@@ -8,9 +8,9 @@ productsPut,
 productsDelete
 } = require('../controllers/Product.controller');
 
-router.get('/products', chkToken ,productsGet);
+router.get('/products' ,productsGet);
 
-router.post('/products', productsPost);
+router.post('/products',chkToken, productsPost);
 
 router.put('/products/:id', chkToken , productsPut);
 

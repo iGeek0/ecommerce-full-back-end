@@ -24,7 +24,14 @@ const login = async (req = request, res = response) => {
         );
         res.status(200).json({
             msg: 'Login success',
-            data: token
+            data: {
+                token,
+                user: {
+                    id: userInformationDB._id,
+                    full_name: `${userInformationDB.name} ${userInformationDB.last_name}`,
+                    email: userInformationDB.email,
+                }
+            }
         });
     } else {
         res.status(401).json({
