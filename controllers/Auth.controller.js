@@ -41,7 +41,29 @@ const login = async (req = request, res = response) => {
 
 };
 
+const verify = async (req = request, res = response) => {
+    const token = req.headers.authorization.split(' ')[1];
+    if (authModel.validarToken(token)) {
+        const { data } = authModel.decodeToken(token);
+        const userInformationDB = await Usuario.findOne({ email: data.email, active: true });
+        if (userInformationDB === null) {
+            return res.status(401).json({
+                msg: 'User not found or inactive',
+            });
+        }
+        res.status(200).json({
+            msg: 'Token valid',
+            data: null
+        });
+    } else {
+        res.status(401).json({
+            msg: 'Invalid token',
+        });
+    }
+};
+
 
 module.exports = {
-    login
+    login,
+    verify
 };
